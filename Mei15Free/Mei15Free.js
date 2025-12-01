@@ -1,6 +1,6 @@
 //Mei15free.js
 
-// I have changed the BOT phone and BOSS phone for now, make sure to change it back laterxx
+// I have changed the BOT phone and BOSS phone for now, make sure to change it back later
 //Have also added the gemini apiKey if andrew does not want then will remove
 // RAG is currently Off
 
@@ -175,7 +175,7 @@ const openaiURL = "https://api.openai.com/v1/chat/completions";
 const openaiModel = "gpt-4.1";
 
 const geminiURL = "https://generativelanguage.googleapis.com/v1beta/openai/chat/completions";
-const geminiModel = "gemini-2.0-flash";
+const geminiModel = "gemini-2.5-flash";
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 function loadPersona() {
@@ -412,51 +412,22 @@ async function callDeepSeek(persona, message, maxTokens, temperature) {
 }
 
 
-// //Gemini's model
-// async function callGemini(persona, message, maxTokens, temperature) {
-//     try {
-//         const response = await axios.post(geminiURL, {
-//             model: geminiModel,
-//             messages: [{ role: "system", content: persona }, { role: "user", content: message }],
-//             temperature: temperature,
-//             max_tokens: maxTokens,
-//             top_p: 1,
-//             frequency_penalty: 0.0,
-//             presence_penalty: 0.0
-//         }, {
-//             headers: { "Authorization": `Bearer ${global.geminiApi}`, "Content-Type": "application/json" }
-//         });
-//         return response.data.choices[0].message.content;
-//   } catch (error) {
-//     console.error("Gemini Error:", error?.response?.data || error.message);
-//         return "This is an automated Whatsapp reply. The user is not available now. d";
-//     }
-// }
-
-// Gemini's Model
 // Gemini's model
+// Removed Max Token as it is able to answer in token efficient manner using the persona
 async function callGemini(persona, message, maxTokens, temperature) {
     try {
         const response = await axios.post(geminiURL, {
             model: geminiModel,
-            messages: [
-                { role: "system", content: persona },
-                { role: "user", content: message }
-            ],
+            messages: [{ role: "system", content: persona }, { role: "user", content: message }],
             temperature: temperature,
-            max_tokens: maxTokens,
             top_p: 1,
-            // frequency_penalty: 0.0,
-            // presence_penalty: 0.0
         }, {
-            headers: {
-                "Authorization": `Bearer ${global.geminiApi}`,
-                "Content-Type": "application/json"
-            }
+            headers: { "Authorization": `Bearer ${global.geminiApi}`, "Content-Type": "application/json" }
         });
-        return response.data.choices?.[0]?.message?.content || "";
-    } catch (error) {
-        console.error("Gemini Error:", error?.response?.data || error.message);
+        console.log(response.data.choices[0]);
+        return response.data.choices[0].message.content;
+  } catch (error) {
+    console.error("Gemini Error:", error?.response?.data || error.message);
         return "This is an automated Whatsapp reply. The user is not available now. g";
     }
 }
@@ -487,6 +458,7 @@ async function genRAGprompt(userMessage, senderName, MEIPersonaShort, chosenURL,
     );
     
     const ragDecision = ragDecisionRaw.trim().toUpperCase();
+    console.log("The decision for RAG is: " + ragDecision);
     if (ragDecision !== "RAG") return "";
 
     const queryVec = await getEmbedding(userMessage);

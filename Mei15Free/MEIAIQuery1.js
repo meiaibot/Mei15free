@@ -1,4 +1,3 @@
-//Mei15Free
 const path = require("path");
 const axios = require("axios");
 const HelperVersion = path.basename(__filename).replace(/\.[^/.]+$/, "");
@@ -11,6 +10,7 @@ const HelperVersion = path.basename(__filename).replace(/\.[^/.]+$/, "");
  
 async function AIQuery(prompt, chosenURL, chosenModel, chosenAPI, Persona, Temp, MaxToken) {
     try {
+        isGemini = chosenModel.split("-")[0] == "gemini";
         const response = await axios.post(chosenURL, {
             model: chosenModel,
             messages: [
@@ -18,7 +18,7 @@ async function AIQuery(prompt, chosenURL, chosenModel, chosenAPI, Persona, Temp,
                 { role: "user", content: prompt }
             ],
             temperature: Temp,
-            max_tokens: MaxToken
+            ...(!isGemini && { max_tokens: MaxToken }) // Conditionally spread max_tokens
         }, {
             headers: {
                 "Authorization": `Bearer ${chosenAPI}`,
