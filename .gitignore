@@ -1,8 +1,12 @@
-node_modules
-LICENSE_Mei15.tar.gz
 dashboard_pm2
+dashboard_pm2_ori
+node_modules
 userdata/img
+userdata/json/guide_state.json
 userdata/mem
-userdata/voice
 userdata/persona/meipersona-coder-c.txt
 userdata/persona/meipersona-group.txt
+userdata/qr
+userdata/voice
+userdata/whatsapp/session-MEI
+LICENSE_Mei15.tar.gz
